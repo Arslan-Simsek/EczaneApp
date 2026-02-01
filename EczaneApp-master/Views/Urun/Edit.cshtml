@@ -1,0 +1,41 @@
+﻿@model Urun
+<h3>Urun Düzenle</h3>
+<hr>
+<div class="widget-holder col-md-12">
+    <div class="widget-bg">
+        <div class="widget-body">
+            <form asp-controller="Urun" asp-action="edit" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="text-muted" asp-for="Urunİsmi">Ürün İsmi</label>
+                        <input type="text" asp-for="Urunİsmi" class="form-control form-control-line">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="KategoriId" class="form-label">Kategori</label>
+                        <select asp-for="KategoriId" asp-items="ViewBag.Kategorim" class="form-select">
+                            <option value="">Seçiniz</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="text-muted" asp-for="Fiyat">Fiyat</label>
+                        <input type="text" asp-for="Fiyat" class="form-control form-control-line">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="text-muted" asp-for="SonKullanmaTarihi">Son Kullanma tarihi</label>
+                        <input type="date" asp-for="SonKullanmaTarihi" class="form-control form-control-line">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="text-muted" asp-for="Aciklama">Açıklama</label>
+                        <input type="text" asp-for="Aciklama" class="form-control form-control-line">
+                    </div>
+                </div>
+                <input asp-for="Id" class="form-control" type="hidden">
+
+                <div class="form-group mr-b-20">
+                    <button class="btn btn-block btn-rounded btn-md btn-color-scheme text-uppercase fw-600 ripple" type="submit">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

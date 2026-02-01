@@ -1,0 +1,25 @@
+﻿@model Depo
+
+<h4>Depo Ekle</h4>
+<hr>
+<div class="widget-holder col-md-12">
+    <div class="widget-bg">
+        <div class="widget-body">
+            <form asp-controller="Depo" asp-action="Create" method="post">
+                <div class="form-group">
+                    <label class="text-muted" asp-for="Depoİsmi">Depo Ekle</label>
+                    <input type="text" asp-for="Depoİsmi" class="form-control form-control-line">
+                </div>
+                <div class="form-group">
+                    <label class="text-muted" asp-for="Adres">Adres Ekle</label>
+                    <input type="text" asp-for="Adres" class="form-control form-control-line">
+                </div>
+                <div class="form-group mr-b-20">
+                    <button class="btn btn-block btn-rounded btn-md btn-color-scheme text-uppercase fw-600 ripple" type="submit">Kaydet</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.widget-body -->
+    </div>
+    <!-- /.widget-bg -->
+</div>

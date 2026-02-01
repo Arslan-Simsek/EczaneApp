@@ -1,0 +1,21 @@
+﻿@model Kategori
+
+<h4>Kategori Ekle</h4>
+<hr>
+<div class="widget-holder col-md-12">
+    <div class="widget-bg">
+        <div class="widget-body">
+            <form asp-controller="Kategori" asp-action="Create" method="post">
+                <div class="form-group">
+                    <label class="text-muted" asp-for="KategoriAdi">Kategori Ekle</label>
+                    <input type="text" asp-for="KategoriAdi" class="form-control form-control-line" >
+                </div>
+                <div class="form-group mr-b-20">
+                    <button class="btn btn-block btn-rounded btn-md btn-color-scheme text-uppercase fw-600 ripple" type="submit">Kaydet</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.widget-body -->
+    </div>
+    <!-- /.widget-bg -->
+</div>

@@ -1,0 +1,101 @@
+﻿@model Satis
+
+<h2>Satış Düzenle</h2>
+
+<h4>Satis</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" method="post" asp-controller="Satis">
+            <input type="hidden" asp-for="Id" />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div class="form-group">
+                
+                <span class="text-danger"></span>
+            </div>
+
+            <h4>Satış Detayları</h4>
+            <div id="satis-detaylari" class="row">
+                @foreach (var detay in Model.SatisDetaylari)
+                {
+                    <div class="form-group col-md-6">
+                        <label>İlaç: @detay.Urun.Urunİsmi</label>
+                        <p>Miktar: @detay.Adet</p>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                    <button type="button" id="add-detay" class="btn btn-secondary">İlaç Ekle</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="toplamFiyat" asp-for="ToplamFİyat">Toplam Fiyat:</label>
+                <input type="text" id="toplamFiyat" class="form-control" readonly />
+                <input type="hidden" id="hiddenToplamFiyat" asp-for="ToplamFİyat" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        // Başlangıçta index değeri 0
+        var index = 0;// Mevcut detay sayısını alarak index belirle
+
+        var urunFiyatlari = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.UrunFiyatlari));
+
+        function hesaplaToplamFiyat() {
+            var toplamFiyat = 0;
+            $('#satis-detaylari .form-group').each(function () {
+                var urunId = $(this).find('select').val();
+                var adet = $(this).find('input[name*="Adet"]').val();
+                var fiyat = urunFiyatlari[urunId];
+                if (adet && fiyat) {
+                    toplamFiyat += (adet * fiyat);
+                }
+            });
+            $('#toplamFiyat').val(toplamFiyat.toFixed(2));
+            $('#hiddenToplamFiyat').val(toplamFiyat.toFixed(2));
+        }
+
+        $("#add-detay").click(function () {
+      var detayHtml = `
+          <div class="form-group col-md-6">
+              <label>İlaç</label>
+              <select name="SatisDetaylari[${index}].UrunId" class="form-control urun-select">
+                  @foreach (var ilac in ViewBag.Urun)
+                  {
+                      <option value="@ilac.Value">@ilac.Text</option>
+                  }
+              </select>
+              <input type="hidden" name="SatisDetaylari[${index}].DepoId" value="1" />
+              <label>Miktar</label>
+              <input type="number" name="SatisDetaylari[${index}].Adet" class="form-control adet-input" />
+              <input type="hidden" name="SatisDetaylari[${index}].Fiyat"/>
+          </div>
+      `;
+      $("#satis-detaylari").append(detayHtml);
+      index++;
+  });
+
+        // Toplam fiyat hesaplama
+        $(document).on('input', '.adet-input', function () {
+            hesaplaToplamFiyat();
+        });
+
+        $(document).on('change', '.urun-select', function () {
+            hesaplaToplamFiyat();
+        });
+
+        // Sayfa yüklendiğinde mevcut detayların toplam fiyatını hesapla
+        hesaplaToplamFiyat();
+    });
+    </script>
+}

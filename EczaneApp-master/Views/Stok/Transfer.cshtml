@@ -1,0 +1,37 @@
+﻿@model UrunTransferiViewModel
+
+    @{
+        ViewData["Title"] = "Ürün Transferi";
+    }
+
+    <h2>Ürün Transferi</h2>
+
+    <form asp-action="Transfer" method="post">
+        <div class="form-group">
+            <label asp-for="UrunId" class="control-label">Ürün Seçin</label>
+            <select asp-for="UrunId" class="form-control" asp-items="ViewBag.Urun"></select>
+            <span asp-validation-for="UrunId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="KaynakDepoId" class="control-label">Kaynak Depo Seçin</label>
+            <select asp-for="KaynakDepoId" class="form-control" asp-items="ViewBag.DepoKaynak"></select>
+            <span asp-validation-for="KaynakDepoId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HedefDepoId" class="control-label">Hedef Depo Seçin</label>
+            <select asp-for="HedefDepoId" class="form-control" asp-items="ViewBag.DepoHedef"></select>
+            <span asp-validation-for="HedefDepoId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Miktar" class="control-label">Miktar</label>
+            <input asp-for="Miktar" class="form-control" />
+            <span asp-validation-for="Miktar" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Transferi Gerçekleştir" class="btn btn-primary" />
+        </div>
+    </form>

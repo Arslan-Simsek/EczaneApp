@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Stok>
+
+<h4>Stok Hareketleri Listesi</h4>
+<a href="/Stok/Create" class="btn btn-primary">Stok Hareketi Ekle</a>
+<hr>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Depo Adı</th>
+            <th>Miktar </th>
+            <th>Hareket Durumu </th>
+
+
+
+            <th style="width: 150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Urun.Urunİsmi</td>
+                <td>@item.Depo.Depoİsmi</td>
+                <td>@item.Miktar</td>
+                <td>
+                    @if (item.HareketTipi == true)
+                    {
+                        <text>Giriş</text>
+                    }
+                    else
+                    {
+                        <text>Çıkış</text>
+                    }
+                </td>
+
+
+
+                <td>
+                    <form method="post" asp-action="Delete" asp-route-id="@item.Id">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,46 @@
+﻿@model UserEditVievModel
+
+<h2>Kullanıcı Bilgilerini Düzenle</h2>
+
+<form asp-action="Edit" method="post" asp-controller="Kullanici">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="İsim" class="control-label"></label>
+        <input asp-for="İsim" class="form-control" />
+        <span asp-validation-for="İsim" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Soyisim" class="control-label"></label>
+        <input asp-for="Soyisim" class="form-control" />
+        <span asp-validation-for="İsim" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="telefon" class="control-label"></label>
+        <input asp-for="telefon" class="form-control" />
+        <span asp-validation-for="telefon" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sifre" class="control-label"></label>
+        <input asp-for="Sifre" type="password" class="form-control" />
+        <span asp-validation-for="Sifre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="YeniSifre" class="control-label"></label>
+        <input asp-for="YeniSifre" type="password" class="form-control" />
+        <span asp-validation-for="YeniSifre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+    </div>
+</form>

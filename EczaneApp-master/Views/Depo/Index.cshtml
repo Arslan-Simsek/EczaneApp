@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Depo>
+
+<h4>Depo Listesi</h4>
+<a href="/Depo/Create" class="btn btn-primary">Depo Ekle</a>
+<hr>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="width: 150px;">Depo İd</th>
+            <th>Depo Adı</th>
+            <th>Adres</th>
+            <th style="width: 150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Depoİsmi</td>
+                <td>@item.Adres</td>
+                <td>
+                    <form method="post" asp-action="Delete" asp-route-id="@item.Id">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

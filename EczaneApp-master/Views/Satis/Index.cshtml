@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Satis>
+
+@{
+    ViewData["Title"] = "Satışlar";
+}
+
+<h2>Satışlar</h2>
+
+<div class="d-flex justify-content-between">
+    <a asp-action="Create" class="btn btn-primary">Yeni Satış Ekle</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Id)</th>
+            <th>@Html.DisplayNameFor(model => model.Tarih)</th>
+            <th>@Html.DisplayNameFor(model => model.ToplamFİyat)</th>
+            <th>Ürünler</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Tarih.ToString("dd.MM.yyyy")</td>
+                <td>@item.ToplamFİyat</td>
+
+                <!-- Ürünleri virgülle ayırarak göster -->
+                <td>
+                    @if (item.SatisDetaylari != null)
+                    {
+                        @string.Join(", ", item.SatisDetaylari.Select(sd => $"{sd.Urun.Urunİsmi} x {sd.Adet}"))
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Düzenle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

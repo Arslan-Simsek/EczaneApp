@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Urun>
+
+<h4>Ürün Listesi</h4>
+<a href="/Urun/Create" class="btn btn-primary">Ürün Ekle</a>
+<hr>
+
+<!-- Arama formu -->
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="form-group">
+        <input type="text" name="aramaTerimi" class="form-control" value="@ViewBag.AramaTerimi" placeholder="Ürün adını girin" />
+    </div>
+    <button type="submit" class="btn btn-primary">Ara</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Ürün Kategorisi</th>
+            <th>Fiyatı </th>
+            <th style="width: 150px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Urunİsmi</td>
+                <td>@item.Kategori.KategoriAdi</td>
+                <td>@item.Fiyat</td>
+                <td>
+                    <form method="post" asp-action="Delete" asp-route-id="@item.Id">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Düzenle</a>
+                        <button class="btn btn-sm btn-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav>
+    <ul class="pagination">
+        @if (ViewBag.SayfaNumarasi > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-sayfaNumarasi="@(ViewBag.SayfaNumarasi - 1)" asp-route-aramaTerimi="@ViewBag.AramaTerimi">Önceki</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= ViewBag.ToplamSayfaSayisi; i++)
+        {
+            <li class="page-item @(i == ViewBag.SayfaNumarasi ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-sayfaNumarasi="@i" asp-route-aramaTerimi="@ViewBag.AramaTerimi">@i</a>
+            </li>
+        }
+
+        @if (ViewBag.SayfaNumarasi < ViewBag.ToplamSayfaSayisi)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-sayfaNumarasi="@(ViewBag.SayfaNumarasi + 1)" asp-route-aramaTerimi="@ViewBag.AramaTerimi">Sonraki</a>
+            </li>
+        }
+    </ul>
+</nav>

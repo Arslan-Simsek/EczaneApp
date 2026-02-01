@@ -1,0 +1,95 @@
+﻿@model Siparis
+
+<h2>Yeni Sipariş Ekle</h2>
+
+<h4>Siparis</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" method="post" asp-controller="Siparis">
+            <div class="form-group">
+                <label asp-for="TedarikciId" class="form-label">Tedarikciler</label>
+                <select asp-for="TedarikciId" asp-items="ViewBag.Tedarikcim" class="form-select">
+                    <option value="">Seçiniz</option>
+                </select>
+            </div>
+
+            <h4>Siparis Detayları</h4>
+            <div id="satis-detaylari" class="row">
+                <div class="form-group col-md-6">
+                    <label>İlaç</label>
+                    <select name="SiparisDetaylari[0].UrunId" class="form-control">
+                        @foreach (var ilac in ViewBag.Urun as SelectList)
+                        {
+                            <option value="@ilac.Value">@ilac.Text</option>
+                        }
+                    </select>
+                    <label>Miktar</label>
+                    <input type="number" name="SiparisDetaylari[0].Adet" class="form-control" />
+                    <label>Birim Fiyat</label>
+                    <input type="number" name="SiparisDetaylari[0].Fiyat" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                    <button type="button" id="add-detay" class="btn btn-secondary">Ürün Ekle</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="toplamFiyat">Toplam Fiyat:</label>
+                <input type="text" id="toplamFiyat" class="form-control" readonly />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var index = 1;
+
+            function hesaplaToplamFiyat() {
+                var toplamFiyat = 0;
+                $('#satis-detaylari .form-group').each(function () {
+                    var adet = $(this).find('input[name*="Adet"]').val();
+                    var fiyat = $(this).find('input[name*="Fiyat"]').val();
+                    if (adet && fiyat) {
+                        toplamFiyat += (adet * fiyat);
+                    }
+                });
+                $('#toplamFiyat').val(toplamFiyat.toFixed(2));
+            }
+
+            $("#add-detay").click(function () {
+                var detayHtml = `
+                    <div class="form-group col-md-6">
+                        <label>İlaç</label>
+                        <select name="SiparisDetaylari[${index}].UrunId" class="form-control">
+                            @foreach (var ilac in ViewBag.Urun as SelectList)
+                            {
+                                <option value="@ilac.Value">@ilac.Text</option>
+                            }
+                        </select>
+                        <label>Miktar</label>
+                        <input type="number" name="SiparisDetaylari[${index}].Adet" class="form-control" />
+                        <label>Birim Fiyat</label>
+                        <input type="number" name="SiparisDetaylari[${index}].Fiyat" class="form-control" />
+                    </div>
+                `;
+                $("#satis-detaylari").append(detayHtml);
+                index++;
+            });
+
+            // Her bir miktar veya fiyat alanının değişimini izleyerek toplam fiyatı hesapla
+            $(document).on('input', 'input[name*="Adet"], input[name*="Fiyat"]', function () {
+                hesaplaToplamFiyat();
+            });
+
+            // İlk yüklemede mevcut detayların toplam fiyatını hesapla
+            hesaplaToplamFiyat();
+        });
+    </script>
+}

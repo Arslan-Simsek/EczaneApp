@@ -1,0 +1,165 @@
+﻿@model Satis
+
+<h2>Yeni Satış Ekle</h2>
+
+<h4>Satis</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" method="post" asp-controller="Satis">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label>Satış Türü</label>
+                <select id="satis-turu" class="form-control">
+                    <option value="recetesiz">Reçetesiz</option>
+                    <option value="receteli">Reçeteli</option>
+                </select>
+            </div>
+
+            <div id="recete-id-alani" class="form-group" style="display: none;">
+                <label>Reçete ID</label>
+                <input id="recete-id" class="form-control" />
+                <div class="form-group">
+                    <label class="control-label"> Musteri TC</label>
+                    <input id="musteri-tc" class="form-control" />
+                </div>
+                <button type="button" id="recete-getir" class="btn btn-secondary">Reçeteyi Getir</button>
+            </div>
+
+            <div id="recete-detaylari" class="form-group" style="display: none;">
+                <h4>Reçete Detayları</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>İlaç Adı</th>
+                            <th>Miktar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recete-detaylari-body">
+                        <!-- Reçete detayları burada listelenecek -->
+                    </tbody>
+                </table>
+            </div>
+
+
+
+            <h4>Satış Detayları</h4>
+            <div id="satis-detaylari" class="row">
+                <div class="form-group col-md-6">
+                    <label>İlaç</label>
+
+                    <select name="SatisDetaylari[0].UrunId" class="form-control urun-select">
+                        @foreach (var ilac in ViewBag.Urun)
+                        {
+                            <option value="@ilac.Value">@ilac.Text</option>
+                        }
+                    </select>
+                    <input type="hidden" name="SatisDetaylari[0].DepoId" value="1" />
+                    <label>Miktar</label>
+                    <input type="number" name="SatisDetaylari[0].Adet" class="form-control adet-input" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                    <button type="button" id="add-detay" class="btn btn-secondary">İlaç Ekle</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="toplamFiyat">Toplam Fiyat:</label>
+                <input type="text" id="toplamFiyat" class="form-control" readonly />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var index = 1;
+
+
+            var urunFiyatlari = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.UrunFiyatlari));
+
+            function hesaplaToplamFiyat() {
+                var toplamFiyat = 0;
+                $('#satis-detaylari .form-group').each(function () {
+                    var urunId = $(this).find('select[name*="UrunId"]').val();
+                    var adet = $(this).find('input[name*="Adet"]').val();
+                    var fiyat = urunFiyatlari[urunId];
+                    if (adet && fiyat) {
+                        toplamFiyat += (adet * fiyat);
+                    }
+                });
+                $('#toplamFiyat').val(toplamFiyat.toFixed(2));
+            }
+
+            $("#satis-turu").change(function () {
+                if ($(this).val() === "receteli") {
+                    $("#recete-id-alani").show();
+                } else {
+                    $("#recete-id-alani").hide();
+                    $("#recete-detaylari").hide();
+                }
+            });
+
+            $("#recete-getir").click(function () {
+                var receteId = $("#recete-id").val();
+                var musteriTc = $("#musteri-tc").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetReceteDetaylari", "Satis")',
+                    data: { receteId: receteId, musteriTc: musteriTc },
+
+                    method: 'GET',
+                    success: function (data) {
+                        $("#recete-detaylari").show();
+                        $("#recete-detaylari-body").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            var detayHtml = `
+                                <tr>
+                                    <td>${data[i].urunIsmi}</td>
+                                    <td>${data[i].adet}</td>
+                                </tr>
+                            `;
+                            $("#recete-detaylari-body").append(detayHtml);
+                        }
+                    }
+                });
+            });
+
+            $("#add-detay").click(function () {
+                var detayHtml = `
+                    <div class="form-group col-md-6">
+                        <label>İlaç</label>
+                        <select name="SatisDetaylari[${index}].UrunId" class="form-control urun-select">
+                            @foreach (var ilac in ViewBag.Urun)
+                            {
+                                <option value="@ilac.Value">@ilac.Text</option>
+                            }
+                        </select>
+                        <input type="hidden" name="SatisDetaylari[${index}].DepoId" value="1" />
+                        <label>Miktar</label>
+                        <input type="number" name="SatisDetaylari[${index}].Adet" class="form-control adet-input" />
+                    </div>
+                `;
+                $("#satis-detaylari").append(detayHtml);
+                index++;
+            });
+
+            // Her bir miktar veya fiyat alanının değişimini izleyerek toplam fiyatı hesapla
+            $(document).on('input', '.adet-input', function () {
+                hesaplaToplamFiyat();
+            });
+
+            $(document).on('change', '.urun-select', function () {
+                hesaplaToplamFiyat();
+            });
+
+            // İlk yüklemede mevcut detayların toplam fiyatını hesapla
+            hesaplaToplamFiyat();
+        });
+    </script>
+}

@@ -1,0 +1,51 @@
+﻿@model Stok
+
+@{
+    ViewData["Title"] = "Yeni Stok Hareketi Ekle";
+}
+
+<h2> Stok Hareketi Güncelle</h2>
+
+<h4>Stok Hareketi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" asp-controller="Stok" method="post">
+            <div class="form-group">
+                <label asp-for="DepoId" class="control-label">Depo</label>
+                <select asp-for="DepoId" asp-items="ViewBag.Depo" class="form-select">
+                    <option value="">Seçiniz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrunId" class="control-label">İlaç</label>
+                <select asp-for="UrunId" asp-items="ViewBag.Urun" class="form-select">
+                    <option value="">Seçiniz</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Miktar" class="control-label">Miktar</label>
+                <input asp-for="Miktar" class="form-control" />
+                <span asp-validation-for="Miktar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HareketTipi" class="control-label">Hareket Türü</label>
+                <select asp-for="HareketTipi" class="form-control">
+                    <option value="true">Giriş</option>
+                    <option value="false">Çıkış</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+            </div>
+            <input asp-for="Id" type="hidden" />
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Geri Dön</a>
+</div>
+
